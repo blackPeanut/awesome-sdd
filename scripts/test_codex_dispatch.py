@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Exercise Codex dispatch arguments, settings isolation and read-only failure paths."""
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -198,6 +199,23 @@ class DispatchTests(unittest.TestCase):
             self.plan(model="sonnet")
         with self.assertRaises(ValueError):
             self.plan(effort="unlimited")
+
+    def test_plain_python_invocation_does_not_write_into_installed_plugin(self):
+        installed = self.root / "installed/_shared/scripts"
+        installed.mkdir(parents=True)
+        for name in ("settings.py", "resolve_dispatch.py"):
+            (installed / name).write_bytes((HELPERS / name).read_bytes())
+        (installed.parent / "settings-file.md").write_bytes((HELPERS.parent / "settings-file.md").read_bytes())
+        runtime = self.root / "runtime.json"
+        runtime.write_text(json.dumps(self.runtime))
+        before = {str(p): p.read_bytes() for p in installed.parent.rglob("*") if p.is_file()}
+        environment = dict(os.environ)
+        environment.pop("PYTHONDONTWRITEBYTECODE", None)
+        process = subprocess.run([sys.executable, str(installed / "resolve_dispatch.py"),
+            "--runtime", str(runtime), "--settings", str(self.path), "--role", "implementer"],
+            env=environment, capture_output=True, text=True)
+        self.assertEqual(process.returncode, 0, process.stdout + process.stderr)
+        self.assertEqual(before, {str(p): p.read_bytes() for p in installed.parent.rglob("*") if p.is_file()})
 
     def test_cli_round_trip_is_read_only_and_fails_on_invalid_settings(self):
         runtime = self.root / "runtime.json"

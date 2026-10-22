@@ -9,6 +9,9 @@ import json
 from pathlib import Path
 import sys
 
+# Importing a sibling helper must not create files in an installed plugin.
+sys.dont_write_bytecode = True
+
 from settings import (CODEX_EFFORTS, CODEX_ROLES, SettingsError,
                       load_settings, valid_codex_model)
 
