@@ -1,0 +1,8 @@
+Read {{PLUGIN_ROOT}}/agents/researcher.md and execute only mode: fact-check.
+Question: Does our deployed export API support 1000 records per request?
+Decision: whether the proposed bulk workflow is feasible without batching.
+Owner constraint: no new service. Known sources: docs/api-v1.md and docs/operations.md.
+Remaining source budget: 2. Inspect only these files; external research is disabled for this run.
+Return evidence and limits. Do not write files, ask questions, invoke interview, or create a competitor table.
+
+In your final report, confirm whether you successfully read the supplied agent definition; report a missing file explicitly.

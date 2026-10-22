@@ -1,0 +1,6 @@
+Use the config skill at {{PLUGIN_ROOT}}/skills/config/SKILL.md in preview mode.
+Read its config interview, ask-style, and artifact-language references, plus the existing
+project settings and README. Present the host-confirmation question and its options as plain
+text, then show a sample next-stage handoff. This is headless: do not call AskUserQuestion,
+change files, normalize settings, or infer an answer. Include the paths of the plugin
+instructions you successfully loaded in your final message.

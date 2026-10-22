@@ -1,0 +1,11 @@
+Run /awesome-sdd:specify export-status --depth=easy using docs/idea-brief.md.
+This is a headless evaluation of specify (not interview). The owner's brief already fixes audience,
+problem, direction, and exclusions. Reuse these answers; do not fabricate an interview or repeat them.
+Current owner-supplied specification details: an authorized operator sees their tenant's completed,
+failed and pending exports; a late completion updates its displayed outcome; missing outcomes are
+shown as unknown; invalid filters show validation; unauthorized tenants remain inaccessible;
+export records must never be modified by viewing; empty results are explicit. Preserve existing
+service reliability; no new latency or growth KPI promises. Size XS, route quick. Use source-backed
+constraints and leave unspecified product targets open rather than inventing metrics.
+No external research or new approach comparison is requested; no actual implementation. Produce
+spec.md with traceability and the normal handoff. Leave the accepted brief unchanged.

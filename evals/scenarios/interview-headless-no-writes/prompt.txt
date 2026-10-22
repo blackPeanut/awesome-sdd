@@ -1,0 +1,4 @@
+Read the interview skill from the loaded plugin and run /awesome-sdd:interview export-status --depth=easy.
+This is a headless, non-interactive eval: no human response channel. Do not simulate a user.
+Raw idea: We use PostgreSQL and want a read-only export-status view, preserving access rules.
+Stop according to interview's gate. Do not create settings, a brief, .gitignore, or helper outputs.

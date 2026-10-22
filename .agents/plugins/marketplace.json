@@ -1,0 +1,20 @@
+{
+  "name": "awesome-sdd",
+  "interface": {
+    "displayName": "Awesome SDD — blackPeanut"
+  },
+  "plugins": [
+    {
+      "name": "awesome-sdd",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/blackPeanut/awesome-sdd"
+      },
+      "category": "Productivity",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_USE"
+      }
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+# Blast-radius heuristic — when an architectural decision becomes ADR-worthy
+
+Use this gate to retain the reasoning for consequential choices without turning every answer
+into a separate document. Score internally after a choice is accepted; do not ask the user to
+review the scoring or choose a documentation format. No minimum or target ADR count.
+
+## The three criteria
+
+A decision crosses the threshold if it scores **2 of 3** (a single criterion = keep a concise inline rationale by default).
+
+### 1. Irreversible
+
+> If we picked a different option three months from now, would the rework take ≥3 days?
+
+**Fires** for, e.g.:
+
+- **Storage shape** — relational vs document vs object store; moving later means a data migration measured in weeks.
+- **Sync vs async module coupling** — a direct call vs a background event changes the data shape and the failure model of everything downstream.
+- **ID strategy** — random vs time-sortable vs auto-increment; switching later needs a *backfill* (a script that walks every existing row and rewrites its id, read-locking those rows while it runs).
+- **Auth model** — sessions vs per-request tokens; changes the shape of every request.
+- **Sharding / partition key** — the key data is spread across servers by; changing it later means re-clustering everything.
+
+**Does not fire** for, e.g.:
+
+- **Library choice within the same language** (two equivalent libraries for the same job) — rework is search-and-replace, a few hours.
+- **A configuration value** (a 5s vs 10s timeout) — one PR.
+- **Naming** (`objective` vs `title`) — the IDE renames it in a minute.
+
+### 2. Multi-module impact
+
+> Does this decision change a contract seen by ≥2 modules?
+
+**Fires** for: an event schema crossing module boundaries; a shared error-code namespace; a pagination convention used by several endpoints; a migration adding a column other modules read.
+
+**Does not fire** for: an internal function name inside one module; a private method signature; a log format used by only one component.
+
+### 3. Has legitimate alternatives
+
+> Will a reader six months from now ask «why not X?» where X is a real, non-strawman alternative?
+
+**Excludes:** decisions where the alternative is obviously worse (no strawman ADRs); decisions where the alternative is ruled out by an existing constraint (no ADR for «we used the language the repo is already written in»).
+
+**Catches:** choices that look arbitrary from the code (why *this* cache TTL? why *this* circuit-breaker threshold?); trade-offs where two reasonable engineers would pick differently; anything where the option set was 2–3 serious options, not 1.
+
+## Using the heuristic during the Socratic pass
+
+After each `AskUserQuestion` choice:
+
+1. **Score it** — how many of the three fire?
+2. **Decide:** 0 → inline, no ADR. 1 → borderline (default inline, except §4 Solution Strategy where the bar is lower because strategy is broad by definition). 2+ → ADR.
+3. **On a borderline,** record a short inline rationale. Create a separate ADR if the user asks for it; do not add a documentation question to the conversation.
+
+## Record length
+
+Keep the chosen option, reason, genuine alternatives and consequences concise. Preserve the
+canonical template and required links, but do not pad sections or create extra decisions to hit a
+count. The detailed record is available by link; the conversation stays on practical choices.
+
+## Closing self-review
+
+1. Does §9 reference every file in `adr/`? No orphans.
+2. Does every ADR have a Status (`Accepted`) and a Decision outcome (not just a Context)?
+3. For each ADR — would the heuristic still gate it if you ran it again? (Did you ADR-ify a trivial config value?)
+4. For inline decisions — does any feel like it should have been an ADR? Promote it.
+
+## Anti-patterns
+
+- **ADR-ifying the alternative you rejected.** The ADR is about the chosen path; alternatives go in `## Considered options`, not their own file.
+- **An ADR with `Status: Proposed` from this skill.** Synchronous decisions with the user → `Accepted`. Use `decide-adr` for asynchronous Proposed → Accepted flows.
+- **One ADR per quality goal.** Quality goals live in §10; ADRs document the specific *decisions* taken because of them.
+- **A title that names the problem, not the decision.** `0003-rate-limiting.md` (bad) vs `0003-sliding-window-counter.md` (good).

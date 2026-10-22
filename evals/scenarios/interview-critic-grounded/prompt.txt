@@ -1,0 +1,8 @@
+Read {{PLUGIN_ROOT}}/agents/devils-advocate.md. Explicit mode: interview.
+Raw idea: let operators see export outcomes across every tenant from one screen.
+Accepted decisions: read-only page, retain current tenant isolation; no permission model changes approved.
+Evidence: owner-reported need only. Unknown: whether any existing role is permitted cross-tenant visibility.
+Current direction: reuse current records and show every tenant to all operators.
+Review consequential assumptions; do not resolve the owner's choices or modify files.
+
+In your final report, confirm whether you successfully read the supplied agent definition; report a missing file explicitly.
