@@ -11,7 +11,7 @@ The live tool schema and session instructions always govern execution.
 | `Agent` / role dispatch | Advertised named agent or generic worker with role instructions | Authorized native delegation with role instructions; no assumed generated named agents. Inline fallback is a self-check. |
 | `TeamCreate` / `Workflow` | Only the resolved compatible backend | Only the resolved compatible backend; otherwise sequential TDD. Generic delegation is not a scheduler. |
 | `/clear` / fresh context | `/clear` in interactive Claude | Desktop: new chat in the same project. Interactive CLI: `/new`. Headless: start a new invocation in the same workdir. Never create a chat without a user request. |
-| `model:` / `effort:` | Claude-scoped roster policy | Inherit host settings unless an explicit authorized override is supported. Never translate tiers. |
+| `model:` / `effort:` | Claude-scoped roster policy | Use `codex_*` preferences via [Codex dispatch](./codex-dispatch.md); inherit when unavailable. Claude frontmatter does not select a Codex model. |
 | `TaskCreate` / `TaskUpdate` | Use `runtime.task_list` if available | Same; otherwise tasks.json and tracker.md remain the source of truth. |
 | Design-tool MCP | Use `runtime.design_tools` | Same; absent → code-mode wireframes and a named limitation. |
 | Shared artifacts and `.claude/sdd.local.md` | Repo-relative files | Identical files; `.claude/` is an ordinary directory here, not evidence of the current host. |

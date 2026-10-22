@@ -2,7 +2,25 @@
 
 Every task runs `SELECT → RED → GREEN → REFACTOR → GATE → COMMIT`. This is the same cycle whether the runner is the sequential agent, a team `implementer`, or a Workflow stage. The RED step is the load-bearing one — skip its discipline and the whole method collapses into "write code, write a test that happens to pass".
 
-Every transition of that cycle is also written to disk as it happens — see **Status protocol** at the end of this file.
+Every observed transition or dispatched worker boundary is written to disk as it happens — see **Status protocol** at the end of this file.
+
+## Sequential role dispatch on Codex
+
+Sequential means one active writer, not necessarily one model. When native delegation is
+available and authorized, dispatch `test-author` for RED, wait for its complete report, then
+`implementer` for GREEN + REFACTOR + GATE. Apply [Codex dispatch](../../_shared/codex-dispatch.md)
+at each boundary. These are bounded workers in the same task checkout; do not leave a previous
+writer running or spawn a team. With TDD off, dispatch only the implementer. The lead remains
+the only writer of task/status mirrors and completion evidence and owns task commits; explicitly
+instruct workers not to update those files or commit. Supply the test path, command, actual
+failure and accepted task requirements to the implementer. Reconcile worker changes, capture
+gate evidence and commit through the existing protocol. Whole-feature review still runs in the
+separate review stage. Without delegation, execute inline and report inherited settings.
+
+Before the combined worker starts, record `in_progress` / `GREEN+REFACTOR+GATE`. Refine that
+step only from progress the lead actually observes; otherwise keep the combined step until the
+worker returns, then record `GATE` while capturing evidence. A crash leaves unfinished work,
+which resume reconciles before any retry. Do not invent intermediate progress.
 
 ## SELECT
 
@@ -78,12 +96,12 @@ In parallel modes the **lead serializes commits in dependency order** even thoug
 
 ## Status protocol — live task status on disk
 
-`implement` keeps every task's progress on disk, updated **at each transition, not at the end**. A
+`implement` keeps every task's progress on disk, updated **at each observed transition and before/after worker dispatch**. A
 crashed or interrupted run can leave partially updated mirrors; the next run reconciles them
 against gate evidence and Git before scheduling.
 
 **Model.** `status` ∈ `todo · in_progress · blocked · review · done`; `step` ∈
-`SELECT · RED · GREEN · REFACTOR · GATE · REVIEW · COMMIT` (for `blocked`, the reason). Three status
+`SELECT · RED · GREEN · GREEN+REFACTOR+GATE · REFACTOR · GATE · REVIEW · COMMIT` (for `blocked`, the reason). Three status
 files carry it, all written together:
 
 | File | Carries |
@@ -99,7 +117,8 @@ files carry it, all written together:
 | task picked in SELECT | `in_progress` / `SELECT` |
 | `test-author` dispatched (or RED begins inline) | `in_progress` / `RED` |
 | RED handover accepted (GOOD red quoted) | `in_progress` / `GREEN` |
-| `implementer` reports green | `in_progress` / `REFACTOR`, then `GATE` when the gate starts |
+| sequential combined `implementer` dispatched | `in_progress` / `GREEN+REFACTOR+GATE`; refine only from observed progress; on return record `GATE` for evidence capture |
+| `implementer` reports green through a live progress event | `in_progress` / `REFACTOR`, then `GATE` when the gate starts |
 | per-task `reviewer` dispatched (team mode, or when configured) | `review` / `REVIEW` |
 | verified commit about to run | provisional `done` / `COMMIT` — rides in the commit, but is not completion evidence |
 | `auto_commit: off`, receipt verified | `done` / `GATE` — verified uncommitted; no Git mutation |
@@ -116,8 +135,9 @@ Transit rows in another task's commit are expected and are reconciled by the sam
 
 **Who writes — one writer per run, never two.**
 
-- **Sequential** — the engine writes the three files after every subagent returns. The status files
-  ride in the task's own commit.
+- **Sequential** — the engine writes the three files before dispatch, on observed progress, and
+  after each worker returns. Combined workers use the explicit combined step above. Inline work
+  records each transition directly. The status files ride in the task's own commit.
 - **Team** — the **lead** writes them after every teammate handover; teammates never touch the status
   files. The lead also makes the task's commit: it applies the teammate's worktree diff in the main
   checkout, adds the status files, and commits once ([`team-exec.md`](./team-exec.md) §Commits).

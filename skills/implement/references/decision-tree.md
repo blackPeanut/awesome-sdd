@@ -1,6 +1,6 @@
 # Decision tree — picking the execution mode (step 5)
 
-The engine has three modes: **sequential single-agent TDD** (the floor everything degrades to), **agent team** (TeamCreate), and **dynamic Workflow**. The choice is deterministic — no judgement call at runtime.
+The engine has three modes: **sequential TDD** (the floor everything degrades to), **agent team** (TeamCreate), and **dynamic Workflow**. The choice is deterministic — no judgement call at runtime.
 
 ## Inputs to the decision
 
@@ -33,7 +33,7 @@ if team_mode AND parallel_eligible AND runtime.team_backend:
 elif workflow_mode == "auto" AND parallel_eligible AND runtime.workflow_backend:
     → DYNAMIC WORKFLOW                    (see workflow-exec.md)
 else:
-    → SEQUENTIAL single-agent TDD (topo order)
+    → SEQUENTIAL TDD (topo order)
 ```
 
 `team_mode` wins over `workflow_mode` when both could apply (a human-shaped team with a reviewer is the richer mode; the workflow is the unattended one).
@@ -68,3 +68,9 @@ SDD implement — feature: notification-preferences
 ```
 
 The banner is mandatory — the user must see the mode and the settings that drove it before any code is written.
+
+For Codex sequential work, bounded roles may run one at a time per the
+[TDD loop](./tdd-loop.md#sequential-role-dispatch-on-codex). This does not enable a parallel backend.
+Include requested coding/review model and effort from [Codex dispatch](../../_shared/codex-dispatch.md)
+in the banner, or say that inline work inherits the current session. Report confirmed settings
+only when the host exposes them; distinguish the configured cap from the active worker count.

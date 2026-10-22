@@ -106,6 +106,14 @@ class RecoveryTests(unittest.TestCase):
         self.write_tasks()
         self.assertEqual(self.state(), "needs_reconciliation")
 
+    def test_interrupted_combined_worker_is_unfinished_without_gate_evidence(self):
+        (self.feature/"tasks/change.md").write_text(
+            "---\nstatus: in_progress\nstep: GREEN+REFACTOR+GATE\n---\nImplement AC-1.\n")
+        before = self.git("rev-parse", "HEAD")
+        self.assertEqual(self.state(), "needs_reconciliation")
+        self.assertEqual(self.git("rev-parse", "HEAD"), before)
+        self.assertEqual((self.root/"app.py").read_text(), "VALUE = 2\n")
+
     def test_successful_commit_is_recovered_even_with_in_progress_mirror(self):
         self.capture()
         self.commit_task()

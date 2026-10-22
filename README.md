@@ -389,12 +389,34 @@ execution mode, not your saved preferences.
 
 | Setting or behavior | Claude Code | Codex |
 |---|---|---|
-| Model selection | Uses compatible saved role preferences and supported overrides. | Inherits the session model unless you explicitly authorize a supported override. |
+| Model selection | Uses compatible saved role preferences and supported overrides. | Requests the separate `codex_*` worker preferences through supported controls; otherwise inherits. |
 | `judgment_model` | Preference for review and reasoning roles; default `opus`. Per-role choices take precedence. | Retained in settings but not translated into a Codex model. |
 | `model_test_author`, `model_implementer`, `model_reviewer` | Defaults are `sonnet`, `sonnet`, `opus`. | Claude tier names aren't applied. |
-| `effort_test_author`, `effort_implementer`, `effort_reviewer` | Defaults are `medium`, `medium`, `high`, where supported. | Uses the host's supported controls and authorization. |
+| `effort_test_author`, `effort_implementer`, `effort_reviewer` | Defaults are `medium`, `medium`, `high`, where supported. | Uses the separate `codex_effort_*` settings. |
 | Fresh context | `/clear` in an interactive session. | A new chat in the same project in desktop, or `/new` in interactive CLI. |
 | Questions | The available question tool. | The available question tool, or a plain text question when needed. |
+
+The Codex worker defaults are:
+
+| Work | Model | Effort |
+|---|---|---|
+| Find relevant code | `gpt-6-luna` | High |
+| Write tests and ordinary code | `gpt-6.1-sol` | Medium |
+| Difficult coding/test tasks, L/XL features, or escalation | `gpt-6.1-sol` | At least high |
+| Review code or check design decisions | `gpt-6.1-sol` | High |
+
+An explicit choice for the current invocation takes precedence. `inherit` leaves a control to the
+host. Model availability and supported effort levels come from the current host; SDD doesn't
+translate Claude tiers or assume every account has these models.
+
+These preferences control **workers**, not the model of your current chat. In sequential Codex
+implementation, the test author and coder run one at a time when delegation is available and
+allowed. The lead collects their results, records progress and commits verified work. If workers
+aren't available, implementation runs inline with the chat's settings. Parallel scheduling is
+unchanged.
+
+SDD briefly reports what it requests and any fallback. It calls settings confirmed only when the
+host exposes that information; otherwise it says “requested; host did not expose confirmation.”
 
 On Claude, an unset judgment preference is a minimum preference, not a forced downgrade from a
 stronger session model. If the comparison is unknown, SDD inherits rather than guessing.
@@ -438,10 +460,18 @@ cmd_vet: ""
 model_test_author: sonnet  # per-role model; inherit = session model
 model_implementer: sonnet
 model_reviewer: opus
-judgment_model: opus       # Claude-only preference; Codex inherits its session model
+judgment_model: opus       # Claude-only preference; Codex uses separate codex_* preferences
 effort_test_author: medium # per-role effort; raised to high on escalation
 effort_implementer: medium
 effort_reviewer: high
+codex_model: gpt-6.1-sol       # default Codex worker model; inherit = host choice
+codex_model_explorer: gpt-6-luna # lighter model for bounded code exploration
+codex_effort_explorer: high
+codex_effort_test_author: medium
+codex_effort_implementer: medium
+codex_effort_reviewer: high
+codex_effort_judgment: high    # critic, devils-advocate, strategist and analyst
+codex_effort_complex: high     # raise coding/test effort for difficult work or escalation
 ```
 
 Legacy non-English `artifact_language` values still produce English conversation and documents.
@@ -505,10 +535,28 @@ manifests. Set an override only when that detection doesn't find the right comma
 
 ### Models and effort
 
-`model_test_author`, `model_implementer` and `model_reviewer` select role models where the host
-supports them. `effort_test_author`, `effort_implementer` and `effort_reviewer` set the respective
-reasoning effort. `judgment_model` supplies the Claude judgment preference. Their defaults and
-host-specific behavior are in the expandable sections above.
+Claude uses `model_test_author`, `model_implementer`, `model_reviewer`, their matching
+`effort_*` values, and `judgment_model`.
+
+Codex uses its own preferences:
+
+| Setting | Meaning |
+|---|---|
+| `codex_model` | Default worker model. |
+| `codex_model_explorer` | Override for code exploration. |
+| `codex_effort_test_author`, `codex_effort_implementer` | Reasoning for tests and code. |
+| `codex_effort_reviewer` | Reasoning for code review. |
+| `codex_effort_explorer` | Reasoning for code exploration. |
+| `codex_effort_judgment` | Reasoning for design/decision checks, unless a role overrides it. |
+| `codex_effort_complex` | Minimum coding/test effort for difficult work or escalation. `inherit` disables automatic increases. |
+
+For any other role, add `codex_model_<role>` or `codex_effort_<role>`, replacing hyphens with
+underscores—for example, `codex_model_test_author`. An explicit invocation choice takes precedence.
+A role effort of `inherit` is never raised automatically. To inherit every worker model, set
+`codex_model` and any role-model overrides (including `codex_model_explorer`) to `inherit`.
+Model and effort choices are independent; only supported values are sent to the worker tool.
+Missing keys use defaults without rewriting an existing settings file. Nothing changes your
+global Codex configuration.
 
 </details>
 

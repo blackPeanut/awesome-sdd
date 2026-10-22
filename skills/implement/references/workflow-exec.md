@@ -65,4 +65,4 @@ The same lanes as the team apply: `layer: migration` tasks are forced into a sin
 
 ## Graceful fallback
 
-If the `Workflow` tool is **not available** at runtime, this whole mode is skipped by the decision-tree guard — the engine falls through to the team (if eligible) or to sequential single-agent TDD. The generated script is never a hard dependency.
+If the `Workflow` tool is **not available** at runtime, this whole mode is skipped by the decision-tree guard — the engine falls through to the team (if eligible) or to sequential TDD. The generated script is never a hard dependency.

@@ -30,18 +30,32 @@ already answered questions. Don't bundle execution, commits and branches into a 
 | Use the current branch or create a feature branch? | `branch_strategy` |
 | Should I choose routine defaults or discuss each meaningful choice? | `interview_depth` — easy/medium/hard semantics from the canonical depth policy; all questions stay short |
 
-These topics cover 13 execution/gate/discussion keys. The seven supported model/effort keys below
-bring the total to 20. This is coverage for a requested full walkthrough, not a required 20-question
-interview. The four `cmd_*` overrides stay unchanged unless the user explicitly requests one;
-empty values keep command detection. `artifact_language` stays effectively English; offer a legacy
+These topics are coverage for a requested full walkthrough, not a required questionnaire.
+The four `cmd_*` overrides stay unchanged unless the user explicitly requests one; empty values
+keep command detection. `artifact_language` stays effectively English; offer a legacy
 normalization only when relevant, without rewriting it silently.
 
 ## Host and models
 
 Resolve host capabilities from the live session, asking only if uncertainty affects an action.
-On Codex or another non-Claude host, explain inherited model/effort briefly; don't offer Claude
-presets or rewrite saved Claude preferences. Explicit overrides require actual host support and
-authorization. Nothing in this conversation changes the running host implicitly.
+On Codex, use [Codex dispatch](../../_shared/codex-dispatch.md). Explain the actual model/effort
+controls available, including when work must remain inline. Ask only the relevant choice:
+
+| Short question | Keys |
+|---|---|
+| Use the configured coding model, or follow the chat's model? | `codex_model`; for an all-role inheritance request also any role-model overrides, including `codex_model_explorer` |
+| Use a lighter model for finding relevant code? | `codex_model_explorer` |
+| How much reasoning should coding or tests use? | `codex_effort_implementer` or `codex_effort_test_author`, one role at a time unless both were requested |
+| Give reviews more time to check edge cases? | `codex_effort_reviewer` |
+| How much reasoning should design and decision checks use? | `codex_effort_judgment` |
+| Give difficult coding tasks more reasoning automatically? | `codex_effort_complex`; `inherit` disables the automatic increase |
+| Change the exploration effort? | `codex_effort_explorer` |
+
+A requested custom role can use `codex_model_<role>` / `codex_effort_<role>` (underscores for
+hyphens). Both accept `inherit`. A model choice does not also change effort. Preserve existing
+Claude preferences. These settings affect future workers, never the running chat or global
+Codex configuration. Offer only models/efforts supported by the live host; missing controls
+mean inheritance, not a guessed mapping. On other non-Claude hosts, explain inheritance.
 
 On Claude, ask a practical model choice only when relevant: “Use the session model throughout,
 or use a stronger available model for reviews?” Explain the actual cost/quality tradeoff without

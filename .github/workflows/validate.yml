@@ -33,6 +33,9 @@ jobs:
           python3 -m pip install 'PyYAML>=6,<7'
           python3 scripts/test_recovery.py
 
+      - name: Codex model and effort dispatch
+        run: python3 scripts/test_codex_dispatch.py
+
       - name: No references to excluded legacy dirs
         run: |
           if grep -REn '00-overview|document-templates|examples/|scripts/sdlc_lint|generate-gates' skills agents README.md 2>/dev/null; then

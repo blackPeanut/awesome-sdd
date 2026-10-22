@@ -17,7 +17,7 @@ Resolve each role through the shared runtime and [agent roster](../../_shared/ag
 
 1. Create the team (`TeamCreate`). Seed a shared **TaskList** from `tasks.json` — **the full task text goes in each task body**, and that text is the task's own markdown: read `tasks.json`'s `file` field (`docs/features/<slug>/tasks/<task-slug>.md`) and put **its body** in the TaskList entry, alongside the JSON's `id`, `title`, `dod` and `files_hint`. Do not reassemble a brief from JSON fields + spec §5 — `tasks` already inlined the §5 acceptance criteria verbatim into that file, with provenance signatures, and reassembling loses them. If a task has no `file` (an older breakdown), fall back to the JSON fields + spec §5 and say so in the banner. Teammates do NOT read the plan or the conversation; the task body is their whole brief, and upstream is their fallback when a slice falls short ([`./inputs.md`](./inputs.md)).
 2. Give each agent its own git **worktree** under `.worktrees/<agent>` (`isolation: worktree` is required for the team — the guard enforces it). No two agents share a tree.
-3. Resolve per-role model and effort through the roster and runtime; print effective values, including inheritance, in the banner.
+3. Resolve per-role model and effort through the roster and runtime; report requested values and fallbacks in the banner; call them confirmed only when the host exposes actual settings.
 
 ## Flow per task
 

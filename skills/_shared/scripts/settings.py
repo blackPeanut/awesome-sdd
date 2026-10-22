@@ -67,6 +67,19 @@ BOOLS = {"tdd", "team_mode", "stop_on_red", "gate_lint", "gate_vet"}
 INTS = {"max_parallel_agents", "max_red_retries"}
 
 
+CODEX_ROLES = {"explorer", "test_author", "implementer", "reviewer", "critic",
+               "devils_advocate", "researcher", "strategist", "analyst", "pen_keeper"}
+CODEX_MODEL_KEYS = {"codex_model"} | {f"codex_model_{role}" for role in CODEX_ROLES}
+CODEX_EFFORT_KEYS = {f"codex_effort_{role}" for role in CODEX_ROLES | {"judgment", "complex"}}
+CODEX_EFFORTS = {"inherit", "none", "minimal", "low", "medium", "high", "xhigh", "max", "ultra"}
+CLAUDE_ALIASES = {"haiku", "sonnet", "opus", "fable"}
+
+
+def valid_codex_model(value):
+    return (isinstance(value, str) and bool(value) and not any(c.isspace() for c in value)
+            and value not in CLAUDE_ALIASES)
+
+
 def load_settings(path):
     path = Path(path)
     template = (Path(__file__).resolve().parents[1] / "settings-file.md").read_text()
@@ -84,7 +97,11 @@ def load_settings(path):
         supplied = parse_mapping("\n" + "\n".join(lines[1:end]), str(path))
         for key, value in supplied.items():
             valid = True
-            if key in ENUMS:
+            if key in CODEX_MODEL_KEYS:
+                valid = valid_codex_model(value)
+            elif key in CODEX_EFFORT_KEYS:
+                valid = isinstance(value, str) and value in CODEX_EFFORTS
+            elif key in ENUMS:
                 valid = isinstance(value, str) and value in ENUMS[key]
             elif key in BOOLS:
                 valid = type(value) is bool
@@ -99,7 +116,8 @@ def load_settings(path):
                 line = next((i for i, s in enumerate(lines, 1) if s.startswith(key + ":")), "?")
                 raise SettingsError(f"{path}: line {line}: invalid value/type for {key}; no defaults applied")
     effective = defaults | {key: value for key, value in supplied.items()
-                            if key in defaults or key.startswith(("model_", "effort_"))}
+                            if key in defaults or key in CODEX_MODEL_KEYS | CODEX_EFFORT_KEYS
+                            or key.startswith(("model_", "effort_"))}
     effective["artifact_language"] = "en"
     return effective
 

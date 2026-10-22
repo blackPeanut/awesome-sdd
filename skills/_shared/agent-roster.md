@@ -3,6 +3,8 @@
 Resolve [host capabilities](./host-capabilities.md) once, then use that `runtime` for every
 dispatch. A role is a task contract in `agents/*.md`, not a promise that a named agent is registered.
 
+These are the Claude role depths; Codex uses its model-specific profile in the dispatch section.
+
 | Role | Work | Desired reasoning depth |
 |---|---|---|
 | `explorer` | cited read-only codebase scan | low |
@@ -30,12 +32,16 @@ dispatch. A role is a task contract in `agents/*.md`, not a promise that a named
 
 ## Model and effort resolution
 
-**Codex and other hosts:** inherit the session model and effort by default (omit dispatch overrides).
-Claude frontmatter, `judgment_model: opus`, `model_*: sonnet` and `CLAUDE_CODE_*` variables are not
-portable runtime choices. Preserve these saved values but do not apply them outside Claude.
-An explicit user-selected host model or effort may be used only when the live tool supports it
-and session instructions permit the override; unknown values are not guessed or translated.
-If no override is possible, report inheritance, not an escalation that never happened.
+**Codex:** use [Codex worker settings](./codex-dispatch.md) for every role dispatch. The
+`codex_*` preferences request supported model/effort overrides through the actual worker tool,
+including any required fresh-context arguments. The read-only resolver supplies those arguments;
+apply them, collect the result and distinguish requested values from host-confirmed values.
+Claude frontmatter, `judgment_model`, `model_*`, `effort_*` and `CLAUDE_CODE_*` variables never
+supply Codex choices. Preserve them unchanged. Unsupported or unauthorized controls fall back
+to inheritance with a short explanation; no runtime escalation is claimed without evidence.
+
+**Other hosts:** inherit supported host settings unless an explicit authorized override exists.
+Never translate provider tiers or export variables to reconfigure an already-running host.
 
 **Claude Code only:** compatible overrides resolve in this order: host environment > explicit
 invocation > `model_<role>` > `judgment_model` (judgment roles only) > agent frontmatter > session.
@@ -46,7 +52,7 @@ explicit. `CLAUDE_CODE_SUBAGENT_MODEL` and `CLAUDE_CODE_EFFORT_LEVEL` apply only
 Claude dispatch mechanism; a shell export cannot retroactively reconfigure an existing tool.
 Do not claim a setting took effect without evidence from the host.
 
-For L/XL, desired execution depth rises to high and reviewer/critic depth to the highest supported
+For Claude L/XL, desired execution depth rises to high and reviewer/critic depth to the highest supported
 level up to xhigh. Explicit authorized effort choices win. On hosts without supported override
 controls this changes review thoroughness, not the model or reasoning setting.
 

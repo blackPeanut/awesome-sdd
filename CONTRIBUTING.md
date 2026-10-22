@@ -25,11 +25,15 @@ license attribution when maintaining this plugin.
 
 Engine subagents live in `agents/*.md` with `name` / `description` / `model` / `effort`
 frontmatter and a system prompt that instructs them to read upstream artifacts directly. Each
-agent pins the **role-fit tier alias** per
-[`skills/_shared/agent-roster.md`](./skills/_shared/agent-roster.md) — `haiku` for scan, `sonnet`
-for execution, `opus` for judgment — overridable at dispatch (the `judgment_model` switch, the
-`model_<role>` keys, env). `install.sh` rewrites the generated Codex / Cursor agent copies to
-`model: inherit`.
+agent carries Claude-specific tier defaults; [the roster](./skills/_shared/agent-roster.md)
+resolves them for the current host. Codex uses separate `codex_*` preferences and the read-only
+[dispatch resolver](./skills/_shared/scripts/resolve_dispatch.py). Copied Codex agent files omit
+model and effort so they do not override per-project dispatch settings. Keep requests distinct
+from host-confirmed settings, and preserve fallback behavior when controls are unavailable.
+
+Run `python3 scripts/test_codex_dispatch.py` (requires PyYAML) when changing this policy. It tests
+the actual planned dispatch arguments, settings precedence, fresh-context requirements and
+read-only failure paths without calling a model.
 
 ## Before you open a PR
 

@@ -15,7 +15,7 @@
 | **Change values** (the only writer of existing keys) | [`config`](../config/SKILL.md) | asks, then patches confirmed keys in place. No other skill ever offers to tune a value. |
 | **Read** `interview_depth` | `interview` · `specify` · `clarify` · `design` · `sequences` · `ux-flows` | question ceiling in `interview`; otherwise supplies the discussion default → [`interview-depth.md`](./interview-depth.md) |
 | **Read** `artifact_language` | every artifact-writing skill | the prose language of pipeline documents → [`artifact-language.md`](./artifact-language.md) |
-| **Read** `judgment_model` / `model_<role>` / `effort_<role>` | every skill that dispatches an agent | the tier each agent runs at → [`agent-roster.md`](./agent-roster.md) |
+| **Read** `judgment_model` / `model_<role>` / `effort_<role>` / `codex_*` | every skill that dispatches an agent | the tier each agent runs at → [`agent-roster.md`](./agent-roster.md) |
 | **Read** the engine keys (`tdd`, `team_mode`, `workflow_mode`, `max_parallel_agents`, `isolation`, `stop_on_red`, `max_red_retries`, `gate_*`, `require_integration`, `auto_commit`, `branch_strategy`, `cmd_*`) | `implement` (`cmd_*` + gates also `fix`) | → [`../implement/references/settings.md`](../implement/references/settings.md) |
 | **Read** `auto_commit` | every skill that writes a document | `off` → no commits, the handoff prints the commands → [`write-and-commit.md`](./write-and-commit.md) |
 
@@ -71,10 +71,18 @@ cmd_vet: ""
 model_test_author: sonnet     # per-role model (see _shared/agent-roster.md); inherit = session model
 model_implementer: sonnet
 model_reviewer: opus
-judgment_model: opus       # Claude-only preference; other hosts inherit; per-role overrides win
+judgment_model: opus       # Claude-only preference; Codex has separate codex_* preferences
 effort_test_author: medium    # per-role effort; raised to high on escalation
 effort_implementer: medium
 effort_reviewer: high
+codex_model: gpt-6.1-sol       # default Codex worker model; inherit = host choice
+codex_model_explorer: gpt-6-luna # lighter model for bounded code exploration
+codex_effort_explorer: high
+codex_effort_test_author: medium
+codex_effort_implementer: medium
+codex_effort_reviewer: high
+codex_effort_judgment: high    # critic, devils-advocate, strategist and analyst
+codex_effort_complex: high     # raise coding/test effort for difficult work or escalation
 ```
 
 ## What each key does
@@ -92,8 +100,13 @@ effort_reviewer: high
 - **`auto_commit`** — `per_task` (default), `per_phase`, or `off` (leave commits to the user). Read by **every stage**: document stages commit one commit per document at the end of the step on `per_task` / `per_phase` and only print the commands on `off` (→ `skills/_shared/write-and-commit.md`); in `implement`, `per_task` commits each task, `per_phase` batches per dependency layer.
 - **`branch_strategy`** — `feature`: ensure work is on a feature branch (create one if on the default branch); `current`: commit on the current branch.
 - **`cmd_*`** — explicit command overrides; non-empty values short-circuit detection (the escape hatch for unusual repos). **Empty is the better default** — the detection cascade reads the repo's own Makefile / package scripts / language manifests, so a pinned command is one more thing to keep in sync.
-- **`model_*` / `effort_*`** — per-role model + effort for the three execution agents, applied when the engine spawns them (it overrides the agent's frontmatter default). Roster defaults + rationale → `skills/_shared/agent-roster.md`.
-- **`judgment_model`** — Claude-only judgment model preference; default `opus`, with per-role overrides taking precedence. Other hosts preserve it but inherit their session model. See [agent roster](./agent-roster.md) for the floor rule, supported overrides and unavailable-model fallback.
+- **`model_*` / `effort_*`** — Claude-only per-role model + effort for the three execution agents, applied when the engine spawns them (it overrides the agent's frontmatter default). Roster defaults + rationale → `skills/_shared/agent-roster.md`.
+- **`judgment_model`** — Claude-only judgment model preference; default `opus`, with per-role overrides taking precedence. Codex preserves it and uses its separate `codex_*` preferences; other hosts inherit. See [agent roster](./agent-roster.md) for the floor rule, supported overrides and unavailable-model fallback.
+
+
+- **`codex_model` / `codex_model_<role>`** — Codex worker model IDs; role overrides win over the shared model. `inherit` omits that override. Default Sol for coding/review and Luna for exploration; these are requests, not availability guarantees. Existing Claude values are never translated. Role keys replace hyphens with underscores.
+- **`codex_effort_<role>` / `codex_effort_judgment`** — Codex reasoning effort for that role; judgment supplies the fallback for critic, devils-advocate, strategist and analyst. Reviewer has its own independent default. Other unconfigured roles use medium. Accept `inherit`, `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, `max`, `ultra`; dispatch only values the current model/tool actually supports.
+- **`codex_effort_complex`** — minimum coding/test effort for difficult work, L/XL features or escalation; never lowers a higher preference. An explicit invocation effort or role effort `inherit` wins. Set this key to `inherit` to disable automatic increases. Apply through [Codex dispatch](./codex-dispatch.md); never pretend inline work changed models or effort.
 
 ## Editing an existing file (only `config` does this)
 

@@ -21,7 +21,7 @@ jump-straight-to-implement path, not the usual one.
 | Gate | `gate_lint`, `gate_vet`, `require_integration` | which tiers the per-task gate runs; `require_integration: always` BLOCKS before dispatch when no Docker daemon answers |
 | Commands | `cmd_test_unit`, `cmd_test_integration`, `cmd_lint`, `cmd_vet` | a non-empty value short-circuits detection → [`command-detection.md`](./command-detection.md) |
 | Git | `auto_commit`, `branch_strategy` | commit granularity; feature branch vs. current |
-| Dispatch | `model_test_author`, `model_implementer`, `model_reviewer`, `effort_test_author`, `effort_implementer`, `effort_reviewer`, `judgment_model` | the model + effort each spawned agent runs at |
+| Dispatch | `model_test_author`, `model_implementer`, `model_reviewer`, `effort_test_author`, `effort_implementer`, `effort_reviewer`, `judgment_model`, `codex_*` | the model + effort each spawned agent runs at |
 
 **Not engine keys, read elsewhere:** `interview_depth` (the Q&A skills' depth dial) and
 `artifact_language` (compatibility key fixed to English in this fork —
@@ -33,12 +33,14 @@ an implement-only one.
 
 Reuse `runtime` from [host capabilities](../../_shared/host-capabilities.md) and apply
 [the roster policy](../../_shared/agent-roster.md) for every role. Claude's override precedence
-and judgment **floor** apply only on Claude. Codex inherits the session model and effort unless
-an explicit authorized override is supported by the live tool. Saved Claude values stay intact.
+and judgment **floor** apply only on Claude. Codex resolves `codex_*` preferences through
+[Codex dispatch](../../_shared/codex-dispatch.md), then passes the resulting model, effort and
+required context arguments to the actual worker tool. Saved Claude values stay intact.
 Do not export environment variables to try to reconfigure an already-running host.
 
-The banner reports effective model/effort (including inheritance), execution mode and limitations.
-L/XL raises desired review depth per the roster; never claim a runtime setting changed when it did not.
+The banner distinguishes requested settings from confirmed model/effort, inheritance and inline
+execution. Codex uses `codex_effort_complex` for difficult coding/test tasks, L/XL or escalation;
+explicit invocation effort wins. Never claim a runtime setting changed when it did not.
 
 ## Reading semantics
 
