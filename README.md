@@ -225,20 +225,13 @@ Claude Code uses `/clear`.
 
 ## How it works
 
-```mermaid
-flowchart LR
-    A["1 · Decide<br/>What matters"] --> B["2 · Design<br/>How it fits"]
-    B --> C["3 · Build<br/>Code + tests"]
-    C --> D["4 · Review<br/>Whole change"]
-    D --> E["5 · Ship<br/>Checks + PR"]
-    D -.->|Needs a fix| C
-    classDef plan fill:#e0f2fe,stroke:#0284c7,color:#0c4a6e
-    classDef build fill:#ede9fe,stroke:#7c3aed,color:#4c1d95
-    classDef finish fill:#d1fae5,stroke:#059669,color:#064e3b
-    class A,B plan
-    class C build
-    class D,E finish
-```
+Each feature follows the middle path below. Setup tools help you get ready; the tools at the
+bottom help you resume, adjust decisions, or fix a bug along the way.
+
+[![Full Awesome SDD workflow: preparation, all 13 feature stages, the review loop, and supporting tools](assets/workflow.svg)](assets/workflow.svg)
+
+**Read down each column, then move right.** Blue steps stay in every feature route. Dashed
+steps depend on what the feature changes and which route you choose. Click the map to zoom in.
 
 | Step | What happens | What you keep |
 |---|---|---|

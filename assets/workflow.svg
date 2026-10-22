@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="1416" viewBox="0 0 1120 1416" role="img" aria-labelledby="title desc">
+<title id="title">Awesome SDD: the complete workflow</title>
+<desc id="desc">Prepare with interview, survey, roadmap, or scaffold as needed. For each feature, follow specify, clarify, ux-flows, design, sequences, data-model, api, screens, tasks, plan-tests, implement, review, and ship. Review findings return to implement for fixes and another review. Solid blue steps are required; dashed steps depend on the feature and route. Supporting tools are status, config, classify-size, design-system, glossary, decide-adr, and fix. Shipping prepares checks and a pull request; merging is the user's choice.</desc>
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/></marker>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; fill: #172b4d; }
+    .title { font-size: 30px; font-weight: 750; }
+    .heading { font-size: 21px; font-weight: 700; }
+    .label { font-size: 18px; font-weight: 650; }
+    .body { font-size: 17px; fill: #475569; }
+    .code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 16px; fill: #52627b; }
+    .arrow { fill: none; stroke: #64748b; stroke-width: 2; marker-end: url(#arrow); }
+  </style>
+</defs>
+<rect width="1120" height="1416" rx="20" fill="#ffffff"/>
+
+<text x="32" y="49" class="title" >From an idea to a reviewed change</text>
+<text x="32" y="80" class="body" >All 24 skills, with the feature path in the middle.</text>
+<rect x="32" y="108" width="1056" height="184" rx="12" fill="#f8fafc" stroke="#dbe3ee" stroke-width="1.5"/>
+<text x="48" y="140" class="heading" >Prepare as needed</text>
+<text x="297" y="140" class="body" >Choose the tools you need; this is not a fixed sequence.</text>
+<rect x="48" y="164" width="244" height="108" rx="12" fill="#ffffff" stroke="#dbe3ee" stroke-width="1.5"/>
+<text x="60" y="191" class="label" >Talk through the idea</text>
+<text x="60" y="218" class="code" >interview</text>
+<text x="60" y="246" class="body" style="font-size:15px">When the idea needs shaping</text>
+<rect x="308" y="164" width="244" height="108" rx="12" fill="#ffffff" stroke="#dbe3ee" stroke-width="1.5"/>
+<text x="320" y="191" class="label" >Understand the repo</text>
+<text x="320" y="218" class="code" >survey</text>
+<text x="320" y="246" class="body" style="font-size:15px">Map code or plan a new repo</text>
+<rect x="568" y="164" width="244" height="108" rx="12" fill="#ffffff" stroke="#dbe3ee" stroke-width="1.5"/>
+<text x="580" y="191" class="label" >Choose what comes first</text>
+<text x="580" y="218" class="code" >roadmap</text>
+<text x="580" y="246" class="body" style="font-size:15px">Break the idea into features</text>
+<rect x="828" y="164" width="244" height="108" rx="12" fill="#ffffff" stroke="#dbe3ee" stroke-width="1.5"/>
+<text x="840" y="191" class="label" >Create the starting code</text>
+<text x="840" y="218" class="code" >scaffold</text>
+<text x="840" y="246" class="body" style="font-size:15px">For a new repo, after survey</text>
+<path d="M 560 292 V 320" class="arrow"/>
+<text x="32" y="353" class="heading" >For each feature</text>
+<text x="228" y="353" class="body" >Read down each column, then move to the next.</text>
+<rect x="32" y="371" width="18" height="18" rx="4" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="59" y="386" class="body" >Required step</text>
+<rect x="224" y="371" width="18" height="18" rx="4" fill="#fffbeb" stroke="#b7791f" stroke-width="1.5" stroke-dasharray="6 4"/>
+<text x="251" y="386" class="body" >Optional stage — follow the route rules below</text>
+<rect x="32" y="408" width="320" height="594" rx="12" fill="#f8fafc" stroke="#dbe3ee" stroke-width="1.5"/>
+<text x="48" y="442" class="heading" >1  Agree on the feature</text>
+<rect x="48" y="468" width="288" height="72" rx="12" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="62" y="497" class="label" >Agree on the behavior</text>
+<text x="62" y="522" class="code" >specify</text>
+<path d="M 192.0 540 V 572" class="arrow"/>
+<rect x="48" y="572" width="288" height="72" rx="12" fill="#fffbeb" stroke="#b7791f" stroke-width="1.5" stroke-dasharray="6 4"/>
+<text x="62" y="601" class="label" >Clear up open questions</text>
+<text x="62" y="626" class="code" >clarify</text>
+<path d="M 192.0 644 V 676" class="arrow"/>
+<rect x="48" y="676" width="288" height="72" rx="12" fill="#fffbeb" stroke="#b7791f" stroke-width="1.5" stroke-dasharray="6 4"/>
+<text x="62" y="705" class="label" >Map the user journey</text>
+<text x="62" y="730" class="code" >ux-flows</text>
+<path d="M 192.0 748 V 780" class="arrow"/>
+<rect x="48" y="780" width="288" height="72" rx="12" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="62" y="809" class="label" >Decide how it fits</text>
+<text x="62" y="834" class="code" >design</text>
+<rect x="400" y="408" width="320" height="594" rx="12" fill="#f8fafc" stroke="#dbe3ee" stroke-width="1.5"/>
+<text x="416" y="442" class="heading" >2  Work out the details</text>
+<rect x="416" y="468" width="288" height="72" rx="12" fill="#fffbeb" stroke="#b7791f" stroke-width="1.5" stroke-dasharray="6 4"/>
+<text x="430" y="497" class="label" >Map runtime interactions</text>
+<text x="430" y="522" class="code" >sequences</text>
+<path d="M 560.0 540 V 572" class="arrow"/>
+<rect x="416" y="572" width="288" height="72" rx="12" fill="#fffbeb" stroke="#b7791f" stroke-width="1.5" stroke-dasharray="6 4"/>
+<text x="430" y="601" class="label" >Plan data changes</text>
+<text x="430" y="626" class="code" >data-model</text>
+<path d="M 560.0 644 V 676" class="arrow"/>
+<rect x="416" y="676" width="288" height="72" rx="12" fill="#fffbeb" stroke="#b7791f" stroke-width="1.5" stroke-dasharray="6 4"/>
+<text x="430" y="705" class="label" >Define the interfaces</text>
+<text x="430" y="730" class="code" >api</text>
+<path d="M 560.0 748 V 780" class="arrow"/>
+<rect x="416" y="780" width="288" height="72" rx="12" fill="#fffbeb" stroke="#b7791f" stroke-width="1.5" stroke-dasharray="6 4"/>
+<text x="430" y="809" class="label" >Describe screen states</text>
+<text x="430" y="834" class="code" >screens</text>
+<rect x="768" y="408" width="320" height="594" rx="12" fill="#f8fafc" stroke="#dbe3ee" stroke-width="1.5"/>
+<text x="784" y="442" class="heading" >3  Build and ship</text>
+<rect x="784" y="468" width="256" height="72" rx="12" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="798" y="497" class="label" >Break it into tasks</text>
+<text x="798" y="522" class="code" >tasks</text>
+<path d="M 912.0 540 V 572" class="arrow"/>
+<rect x="784" y="572" width="256" height="72" rx="12" fill="#fffbeb" stroke="#b7791f" stroke-width="1.5" stroke-dasharray="6 4"/>
+<text x="798" y="601" class="label" >Plan what to test</text>
+<text x="798" y="626" class="code" >plan-tests</text>
+<path d="M 912.0 644 V 676" class="arrow"/>
+<rect x="784" y="676" width="256" height="72" rx="12" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="798" y="705" class="label" >Write tests and code</text>
+<text x="798" y="730" class="code" >implement</text>
+<path d="M 912.0 748 V 780" class="arrow"/>
+<rect x="784" y="780" width="256" height="72" rx="12" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="798" y="809" class="label" >Review the whole change</text>
+<text x="798" y="834" class="code" >review</text>
+<path d="M 912.0 852 V 884" class="arrow"/>
+<rect x="784" y="884" width="256" height="72" rx="12" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="798" y="913" class="label" >Check and prepare the PR</text>
+<text x="798" y="938" class="code" >ship</text>
+<path d="M 354 452 H 395" class="arrow"/>
+<path d="M 722 452 H 763" class="arrow"/>
+<path d="M 1040 816 H 1062 V 712 H 1040" class="arrow"/>
+<text x="1081" y="764" class="body" text-anchor="middle" transform="rotate(-90 1081 764)" style="font-size:14px">Fix and recheck</text>
+<text x="936" y="872" class="body" style="font-size:14px">Pass</text>
+<text x="48" y="917" class="body" style="font-size:16px">A clear feature is enough to start.</text>
+<text x="48" y="944" class="body" style="font-size:16px">You do not need every setup tool.</text>
+<text x="416" y="917" class="body" style="font-size:16px">UI, data and interface steps depend</text>
+<text x="416" y="944" class="body" style="font-size:16px">on what the feature changes.</text>
+<text x="784" y="980" class="body" style="font-size:16px">Merging stays your choice.</text>
+<text x="32" y="1036" class="body" >Quick skips steps that do not apply. Standard offers those skips. Full visits every stage.</text>
+<text x="32" y="1062" class="body" style="font-size:16px">A skipped test-planning stage still needs tests named in the tasks; quick keeps the plan in the spec.</text>
+<rect x="32" y="1090" width="1056" height="294" rx="12" fill="#f8fafc" stroke="#dbe3ee" stroke-width="1.5"/>
+<text x="48" y="1123" class="heading" >Tools to use along the way</text>
+<rect x="48" y="1144" width="244" height="88" rx="12" fill="#ffffff" stroke="#dbe3ee" stroke-width="1.5"/>
+<text x="60" y="1172" class="label" style="font-size:17px">Pick up where you left off</text>
+<text x="60" y="1201" class="code" >status</text>
+<rect x="308" y="1144" width="244" height="88" rx="12" fill="#ffffff" stroke="#dbe3ee" stroke-width="1.5"/>
+<text x="320" y="1172" class="label" style="font-size:17px">Change your preferences</text>
+<text x="320" y="1201" class="code" >config</text>
+<rect x="568" y="1144" width="244" height="88" rx="12" fill="#ffffff" stroke="#dbe3ee" stroke-width="1.5"/>
+<text x="580" y="1172" class="label" style="font-size:17px">Adjust the size and route</text>
+<text x="580" y="1201" class="code" >classify-size</text>
+<rect x="828" y="1144" width="244" height="88" rx="12" fill="#ffffff" stroke="#dbe3ee" stroke-width="1.5"/>
+<text x="840" y="1172" class="label" style="font-size:17px">Set shared UI patterns</text>
+<text x="840" y="1201" class="code" >design-system</text>
+<rect x="48" y="1252" width="244" height="88" rx="12" fill="#ffffff" stroke="#dbe3ee" stroke-width="1.5"/>
+<text x="60" y="1280" class="label" style="font-size:17px">Keep terms consistent</text>
+<text x="60" y="1309" class="code" >glossary</text>
+<rect x="308" y="1252" width="244" height="88" rx="12" fill="#ffffff" stroke="#dbe3ee" stroke-width="1.5"/>
+<text x="320" y="1280" class="label" style="font-size:17px">Record a key decision</text>
+<text x="320" y="1309" class="code" >decide-adr</text>
+<rect x="568" y="1252" width="244" height="88" rx="12" fill="#ffffff" stroke="#dbe3ee" stroke-width="1.5"/>
+<text x="580" y="1280" class="label" style="font-size:17px">Fix a bug with a test</text>
+<text x="580" y="1309" class="code" >fix</text>
+<text x="840" y="1279" class="body" style="font-size:15px">Use design-system before</text>
+<text x="840" y="1303" class="body" style="font-size:15px">UI work when shared styles</text>
+<text x="840" y="1327" class="body" style="font-size:15px">and components need defining.</text>
+</svg>
